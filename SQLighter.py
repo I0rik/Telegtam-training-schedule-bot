@@ -26,7 +26,7 @@ class SQLighter:
 
     def get_dates(self):
         with self.connection:
-            self.cursor.execute('SELECT date FROM training_schedule')
+            self.cursor.execute('SELECT DISTINCT date FROM training_schedule ORDER BY date')
         return self.cursor.fetchall()
 
     def close(self):

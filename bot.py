@@ -12,7 +12,7 @@ bot = telebot.TeleBot(config.token)
 @bot.message_handler(commands=['help'])
 def print_help_message(message):
     """Метод возвращает описание и список команд"""
-    result = 'Ты можешь написать /расписание чтобы посмотреть всё расписание на семестр\nты можешь написать /расписание_на_дату чтобы посмотреть расписание на дату. Дата в формате [гггг-мм-дд]'
+    result = '/расписание - посмотреть всё расписание на семестр\n/дата - посмотреть расписание на определённую дату.'
     bot.send_message(message.chat.id, result)
 
 
@@ -25,12 +25,12 @@ def shedule_print(message):
     for row in rows:
         for elem in row:
             result = result + elem + ', '
-        result += '\n'
+        result += '\n\n'
     bot.send_message(message.chat.id, result)
     db_worker.close()
 
 
-@bot.message_handler(commands=['расписание_на_дату'])
+@bot.message_handler(commands=['дата'])
 def shedule_on_day_answer(message):
     """Метод возвращает кастомную клавиатуру с датами"""
     db_worker = SQLighter(config.db_name)
@@ -39,7 +39,7 @@ def shedule_on_day_answer(message):
     for date in dates_from_db:
         dates.append(date[0])
     markup = utils.generate_markup(dates)
-    bot.send_message(message.chat.id, 'какая дата?', reply_markup=markup)
+    bot.send_message(message.chat.id, 'укажите дату?', reply_markup=markup)
     db_worker.close()
 
 
@@ -54,7 +54,12 @@ def shedule_on_day_print(message):
     for row in rows:
         for elem in row:
             result = result + elem + ', '
-    bot.send_message(message.chat.id, result, reply_markup=keyboard_hider)
+        result += '\n\n'
+
+    if result == '':
+        bot.send_message(message.chat.id, 'введите команду или /help для помощи', reply_markup=keyboard_hider)
+    else:
+        bot.send_message(message.chat.id, result, reply_markup=keyboard_hider)
 
 if __name__ == '__main__':
     bot.polling(none_stop=True)
