@@ -20,12 +20,7 @@ def print_help_message(message):
 def shedule_print(message):
     """Метод возвращает расписание на текущий семестр"""
     db_worker = SQLighter(config.db_name)
-    rows = db_worker.select_all()
-    result = ''
-    for row in rows:
-        for elem in row:
-            result = result + elem + ', '
-        result += '\n\n'
+    result = utils.sql_result_to_string(db_worker.select_all())
     bot.send_message(message.chat.id, result)
     db_worker.close()
 
@@ -49,12 +44,7 @@ def shedule_on_day_print(message):
     keyboard_hider = types.ReplyKeyboardRemove()
     db_worker = SQLighter(config.db_name)
     date = message.text
-    rows = db_worker.get_shedule_on_day(date)
-    result = ''
-    for row in rows:
-        for elem in row:
-            result = result + elem + ', '
-        result += '\n\n'
+    result = utils.sql_result_to_string(db_worker.get_shedule_on_day(date))
 
     if result == '':
         bot.send_message(message.chat.id, 'введите команду или /help для помощи', reply_markup=keyboard_hider)

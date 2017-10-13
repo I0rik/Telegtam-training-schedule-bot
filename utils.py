@@ -15,3 +15,13 @@ def generate_markup(dates):
             markup.row(dates[i])
 
     return markup
+
+
+def sql_result_to_string(data):
+    """Получаем результат SQL запроса и записываем его в одну строку"""
+    result = ''
+    for row in data:
+        for elem in row:
+            result = result + elem + ', '
+        result += '\n\n'
+    return result 
