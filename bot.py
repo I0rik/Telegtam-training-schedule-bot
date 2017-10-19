@@ -12,11 +12,11 @@ bot = telebot.TeleBot(config.token)
 @bot.message_handler(commands=['help'])
 def print_help_message(message):
     """Метод возвращает описание и список команд"""
-    result = '/расписание - посмотреть всё расписание на семестр\n/дата - посмотреть расписание на определённую дату.'
+    result = '/schedule - посмотреть всё расписание на семестр\n/date - посмотреть расписание на определённую дату.'
     bot.send_message(message.chat.id, result)
 
 
-@bot.message_handler(commands=['расписание'])
+@bot.message_handler(commands=['schedule'])
 def shedule_print(message):
     """Метод возвращает расписание на текущий семестр"""
     db_worker = SQLighter(config.db_name)
@@ -25,7 +25,7 @@ def shedule_print(message):
     db_worker.close()
 
 
-@bot.message_handler(commands=['дата'])
+@bot.message_handler(commands=['date'])
 def shedule_on_day_answer(message):
     """Метод возвращает кастомную клавиатуру с датами"""
     db_worker = SQLighter(config.db_name)
@@ -34,7 +34,7 @@ def shedule_on_day_answer(message):
     for date in dates_from_db:
         dates.append(date[0])
     markup = utils.generate_markup(dates)
-    bot.send_message(message.chat.id, 'укажите дату?', reply_markup=markup)
+    bot.send_message(message.chat.id, 'Выберите дату: ', reply_markup=markup)
     db_worker.close()
 
 
