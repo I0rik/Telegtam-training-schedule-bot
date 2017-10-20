@@ -21,7 +21,7 @@ def shedule_print(message):
     """Метод возвращает расписание на текущий семестр"""
     db_worker = SQLighter(config.db_name)
     result = utils.sql_result_to_string(db_worker.select_all())
-    bot.send_message(message.chat.id, result)
+    bot.send_message(message.chat.id, result, parse_mode='Markdown')
     db_worker.close()
 
 
@@ -49,7 +49,7 @@ def shedule_on_day_print(message):
     if result == '':
         bot.send_message(message.chat.id, 'введите команду или /help для помощи', reply_markup=keyboard_hider)
     else:
-        bot.send_message(message.chat.id, result, reply_markup=keyboard_hider)
+        bot.send_message(message.chat.id, result, parse_mode='Markdown', reply_markup=keyboard_hider)
 
 if __name__ == '__main__':
     bot.polling(none_stop=True)
