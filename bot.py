@@ -25,6 +25,15 @@ def shedule_print(message):
     db_worker.close()
 
 
+@bot.message_handler(commands=['subjects'])
+def shedule_print(message):
+    """Метод возвращает список предметов"""
+    db_worker = SQLighter(config.db_name)
+    result = utils.sql_result_to_string(db_worker.get_subjects())
+    bot.send_message(message.chat.id, result, parse_mode='Markdown')
+    db_worker.close()
+
+
 @bot.message_handler(commands=['date'])
 def shedule_on_day_answer(message):
     """Метод возвращает кастомную клавиатуру с датами"""
