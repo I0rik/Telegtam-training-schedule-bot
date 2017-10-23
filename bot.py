@@ -12,7 +12,7 @@ bot = telebot.TeleBot(config.token)
 @bot.message_handler(commands=['help'])
 def print_help_message(message):
     """Метод возвращает описание и список команд"""
-    result = '/schedule - посмотреть всё расписание на семестр\n/date - посмотреть расписание на определённую дату.'
+    result = '''/date - Показать расписание за выбранную дату.\n/schedule - Показать расписание на семестр.\n/subjects - Показать список предметов с ссылками на материалы.\n/help - Справка.'''
     bot.send_message(message.chat.id, result)
 
 
@@ -56,7 +56,7 @@ def shedule_on_day_print(message):
     result = utils.sql_result_to_string(db_worker.get_shedule_on_day(date))
 
     if result == '':
-        bot.send_message(message.chat.id, 'введите команду или /help для помощи', reply_markup=keyboard_hider)
+        bot.send_message(message.chat.id, 'Неизвестная команда, введите /help для помощи', reply_markup=keyboard_hider)
     else:
         bot.send_message(message.chat.id, result, parse_mode='Markdown', reply_markup=keyboard_hider)
 
