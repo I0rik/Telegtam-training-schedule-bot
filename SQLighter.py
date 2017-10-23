@@ -17,6 +17,13 @@ class SQLighter:
             self.cursor.execute(query)
             return self.cursor.fetchall()
 
+
+    def get_subjects(self):
+        with self.connection:
+            self.cursor.execute('SELECT DISTINCT subject,lecturer FROM training_schedule ORDER BY subject')
+        return self.cursor.fetchall()
+
+
     def get_shedule_on_day(self, date):
         """ Принимаем на вход дату, тащим из ДБ расписание на эту дату """
         with self.connection:
@@ -24,10 +31,12 @@ class SQLighter:
             self.cursor.execute(query)
             return self.cursor.fetchall()
 
+
     def get_dates(self):
         with self.connection:
             self.cursor.execute('SELECT DISTINCT date FROM training_schedule ORDER BY date')
         return self.cursor.fetchall()
+
 
     def close(self):
         """ Закрываем соединение с БД """
