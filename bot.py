@@ -5,20 +5,21 @@ import telebot
 from telebot import types
 from SQLighter import SQLighter
 import utils
+import re
 
 bot = telebot.TeleBot(config.token)
 
 
 @bot.message_handler(commands=['help'])
 def print_help_message(message):
-    """Метод возвращает описание и список команд"""
+    """ Метод возвращает описание и список команд """
     result = '''/date - Показать расписание за выбранную дату.\n/schedule - Показать расписание на семестр.\n/subjects - Показать список предметов с ссылками на материалы.\n/help - Справка.'''
     bot.send_message(message.chat.id, result)
 
 
 @bot.message_handler(commands=['schedule'])
 def shedule_print(message):
-    """Метод возвращает расписание на текущий семестр"""
+    """ Метод возвращает расписание на текущий семестр """
     db_worker = SQLighter(config.db_name)
     result = utils.sql_result_to_string(db_worker.select_all())
     bot.send_message(message.chat.id, result, parse_mode='Markdown')
@@ -27,7 +28,7 @@ def shedule_print(message):
 
 @bot.message_handler(commands=['subjects'])
 def shedule_print(message):
-    """Метод возвращает список предметов"""
+    """ Метод возвращает список предметов """
     db_worker = SQLighter(config.db_name)
     result = utils.sql_result_to_string(db_worker.get_subjects())
     bot.send_message(message.chat.id, result, parse_mode='Markdown')
@@ -36,7 +37,7 @@ def shedule_print(message):
 
 @bot.message_handler(commands=['date'])
 def shedule_on_day_answer(message):
-    """Метод возвращает кастомную клавиатуру с датами"""
+    """ Метод возвращает кастомную клавиатуру с датами """
     db_worker = SQLighter(config.db_name)
     dates_from_db = db_worker.get_dates()
     dates = []
@@ -49,16 +50,26 @@ def shedule_on_day_answer(message):
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def shedule_on_day_print(message):
-    """Метод возвращает расписане на дату"""
+    """ Метод проверяет содержание введённого текста:
+        если введена корректная дата - возвращает расписание на эту дату
+        если ввод не корректный - выводится вспомогательное сообщение
+        небольшая пасхалка если введён вопрос о смысле
+    """
     keyboard_hider = types.ReplyKeyboardRemove()
     db_worker = SQLighter(config.db_name)
     date = message.text
     result = utils.sql_result_to_string(db_worker.get_shedule_on_day(date))
 
-    if result == '':
+    message_text = re.match(r'в (чём|чем) смысл', message.text.lower())
+
+
+    if message_text != None and (message_text.group(0) == 'в чём смысл' or message_text.group(0) == 'в чем смысл'):
+        bot.send_message(message.chat.id, '42', reply_markup=keyboard_hider)
+    elif result == '':
         bot.send_message(message.chat.id, 'Неизвестная команда, введите /help для помощи', reply_markup=keyboard_hider)
     else:
         bot.send_message(message.chat.id, result, parse_mode='Markdown', reply_markup=keyboard_hider)
+
 
 if __name__ == '__main__':
     bot.polling(none_stop=True)
