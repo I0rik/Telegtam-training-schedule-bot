@@ -60,10 +60,11 @@ def shedule_on_day_print(message):
     date = message.text
     result = utils.sql_result_to_string(db_worker.get_shedule_on_day(date))
 
-    message_text = re.match(r'в (чём|чем) смысл', message.text.lower())
+    message_text = re.search(r'(в (чём|чем) смысл)|(ответ на вопрос жизни)', message.text.lower())
 
 
-    if message_text != None and (message_text.group(0) == 'в чём смысл' or message_text.group(0) == 'в чем смысл'):
+    if message_text != None and (message_text.group(0) == 'в чём смысл' or message_text.group(0) == 'в чем смысл'
+                                 or message_text.group(0) == 'ответ на вопрос жизни'):
         bot.send_message(message.chat.id, '42', reply_markup=keyboard_hider)
     elif result == '':
         bot.send_message(message.chat.id, 'Неизвестная команда, введите /help для помощи', reply_markup=keyboard_hider)
