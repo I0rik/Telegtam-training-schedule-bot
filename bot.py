@@ -18,7 +18,7 @@ def print_help_message(message):
 
 
 @bot.message_handler(commands=['schedule'])
-def shedule_print(message):
+def schedule_print(message):
     """ Метод возвращает расписание на текущий семестр """
     db_worker = SQLighter(config.db_name)
     result = utils.sql_result_to_string(db_worker.select_all())
@@ -27,7 +27,7 @@ def shedule_print(message):
 
 
 @bot.message_handler(commands=['subjects'])
-def shedule_print(message):
+def schedule_print(message):
     """ Метод возвращает список предметов """
     db_worker = SQLighter(config.db_name)
     result = utils.sql_result_to_string(db_worker.get_subjects())
@@ -36,7 +36,7 @@ def shedule_print(message):
 
 
 @bot.message_handler(commands=['date'])
-def shedule_on_day_answer(message):
+def schedule_on_day_answer(message):
     """ Метод возвращает кастомную клавиатуру с датами """
     db_worker = SQLighter(config.db_name)
     dates_from_db = db_worker.get_dates()
@@ -49,7 +49,7 @@ def shedule_on_day_answer(message):
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
-def shedule_on_day_print(message):
+def schedule_on_day_print(message):
     """ Метод проверяет содержание введённого текста:
         если введена корректная дата - возвращает расписание на эту дату
         если ввод не корректный - выводится вспомогательное сообщение
@@ -58,7 +58,7 @@ def shedule_on_day_print(message):
     keyboard_hider = types.ReplyKeyboardRemove()
     db_worker = SQLighter(config.db_name)
     date = message.text
-    result = utils.sql_result_to_string(db_worker.get_shedule_on_day(date))
+    result = utils.sql_result_to_string(db_worker.get_schedule_on_day(date))
 
     message_text = re.search(r'(в (чём|чем) смысл)|(ответ на вопрос жизни)', message.text.lower())
 
