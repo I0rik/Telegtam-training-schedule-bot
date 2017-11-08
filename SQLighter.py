@@ -9,9 +9,9 @@ class SQLighter:
         self.cursor = self.connection.cursor()
 
     def select_all(self):
-        """Получаем всё расписание из БД, имя
-           талицы передаётся аргументом в метод
-           """
+        """ Получаем всё расписание из БД, имя
+            талицы передаётся аргументом в метод
+        """
         with self.connection:
             query = 'SELECT date, time, subject, room, lecturer FROM training_schedule'
             self.cursor.execute(query)
@@ -19,6 +19,7 @@ class SQLighter:
 
 
     def get_subjects(self):
+        """ Тащим из ДБ список предметов с фамилиями лекторов """
         with self.connection:
             self.cursor.execute('SELECT DISTINCT subject,lecturer FROM training_schedule ORDER BY subject')
         return self.cursor.fetchall()
@@ -33,6 +34,7 @@ class SQLighter:
 
 
     def get_dates(self):
+        """ Тащим из ДБ все имеющиеся даты без совпадений """
         with self.connection:
             self.cursor.execute('SELECT DISTINCT date FROM training_schedule ORDER BY date')
         return self.cursor.fetchall()
