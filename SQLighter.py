@@ -13,7 +13,7 @@ class SQLighter:
             талицы передаётся аргументом в метод
         """
         with self.connection:
-            query = 'SELECT date, time, subject, room, lecturer FROM training_schedule'
+            query = 'SELECT date, time, subject, room, lecturer FROM training_schedule FROM date != \'\''
             self.cursor.execute(query)
             return self.cursor.fetchall()
 
@@ -25,7 +25,7 @@ class SQLighter:
         return self.cursor.fetchall()
 
 
-    def get_shedule_on_day(self, date):
+    def get_schedule_on_day(self, date):
         """ Принимаем на вход дату, тащим из ДБ расписание на эту дату """
         with self.connection:
             query = "SELECT time, subject, room, lecturer FROM training_schedule WHERE date = date('{}')".format(date)
