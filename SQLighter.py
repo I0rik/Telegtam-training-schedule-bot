@@ -13,7 +13,7 @@ class SQLighter:
             талицы передаётся аргументом в метод
         """
         with self.connection:
-            query = 'SELECT date, time, subject, room, lecturer FROM training_schedule'
+            query = 'SELECT date, time, subject, room, lecturer FROM training_schedule WHERE date >= date(\'now\')'
             self.cursor.execute(query)
             return self.cursor.fetchall()
 
@@ -25,10 +25,10 @@ class SQLighter:
         return self.cursor.fetchall()
 
 
-    def get_shedule_on_day(self, date):
+    def get_schedule_on_day(self, date):
         """ Принимаем на вход дату, тащим из ДБ расписание на эту дату """
         with self.connection:
-            query = "SELECT time, subject, room, lecturer FROM training_schedule WHERE date = date('{}')".format(date)
+            query = "SELECT time, subject, room, lecturer FROM training_schedule WHERE date = date('{}') ".format(date)
             self.cursor.execute(query)
             return self.cursor.fetchall()
 
@@ -36,7 +36,7 @@ class SQLighter:
     def get_dates(self):
         """ Тащим из ДБ все имеющиеся даты без совпадений """
         with self.connection:
-            self.cursor.execute('SELECT DISTINCT date FROM training_schedule ORDER BY date')
+            self.cursor.execute('SELECT DISTINCT date FROM training_schedule WHERE date >= date(\'now\') ORDER BY date ')
         return self.cursor.fetchall()
 
 
