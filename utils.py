@@ -24,4 +24,4 @@ def sql_result_to_string(data):
         for elem in row:
             result = result + elem + ', '
         result += '\n\n'
-    return result 
+    return result

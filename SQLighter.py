@@ -21,14 +21,14 @@ class SQLighter:
     def get_subjects(self):
         """ Тащим из ДБ список предметов с фамилиями лекторов """
         with self.connection:
-            self.cursor.execute('SELECT DISTINCT subject,lecturer FROM training_schedule ORDER BY subject')
+            self.cursor.execute('SELECT DISTINCT subject, materials, lecturer FROM training_schedule')
         return self.cursor.fetchall()
 
 
     def get_schedule_on_day(self, date):
         """ Принимаем на вход дату, тащим из ДБ расписание на эту дату """
         with self.connection:
-            query = "SELECT time, subject, room, lecturer FROM training_schedule WHERE date = date('{}') ".format(date)
+            query = "SELECT time, subject, materials, room, lecturer FROM training_schedule WHERE date = date('{}') ".format(date)
             self.cursor.execute(query)
             return self.cursor.fetchall()
 
